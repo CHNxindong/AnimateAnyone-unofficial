@@ -1,6 +1,7 @@
 pretrained_model_path: "./pretrained_models/stable-diffusion-v1-5"
 pretrained_clip_path: "./pretrained_models/clip-vit-base-patch32"
 
+# 当有specific_motion_unet_model时用这个（直接用AnimateDiff），没有的话用./pretrained_models/motion_unet
 pretrained_motion_unet_path: "./pretrained_models/motion_unet"
 specific_motion_unet_model: "sd15_mmv1.ckpt"
 

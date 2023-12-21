@@ -3,6 +3,7 @@ pretrained_vae_path: "./pretrained_models/sd-vae-ft-mse"
 pretrained_unet_path: "./pretrained_models/unet_stage_1.ckpt"
 pretrained_clip_path: "./pretrained_models/clip-vit-base-patch32"
 
+# question: 没有spatial attention和cross attention ckpt吗？
 pretrained_poseguider_path: "./pretrained_models/poseguider_stage_1.ckpt"
 pretrained_referencenet_path: "./pretrained_models/referencenet_stage_1.ckpt"
 

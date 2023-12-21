@@ -245,6 +245,7 @@ def main(
     # unet.requires_grad_(True)
     # question: trainable_modules?
     for name, param in unet.named_parameters():
+        # question: 看一看trainable_modules具体指什么，'.'指的什么？
         for trainable_module_name in trainable_modules:
             if trainable_module_name in name:
                 # print(trainable_module_name)

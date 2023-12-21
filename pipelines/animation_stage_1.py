@@ -119,7 +119,8 @@ def main(args):
     random_seeds = random_seeds * len(config.source_image) if len(random_seeds) == 1 else random_seeds
     
     # input test videos (either source video/ conditions)
-    
+
+    # test_videos pose序列 source_images reference image
     test_videos = config.video_path
     source_images = config.source_image
     num_actual_inference_steps = config.get("num_actual_inference_steps", config.steps)
