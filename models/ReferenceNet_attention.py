@@ -116,6 +116,7 @@ class ReferenceNetAttention():
                     **cross_attention_kwargs,
                 )
             else:
+                # self.bank: 就是image repeat
                 if MODE == "write":
                     self.bank.append(norm_hidden_states.clone())
                     attn_output = self.attn1(
@@ -134,6 +135,7 @@ class ReferenceNetAttention():
                     # print("########## modify_norm_hidden_states ",modify_norm_hidden_states.dtype,"  ##########") # torch.float32
                     # print("########## self.bank[0] ",self.bank[0].dtype,"  ##########") # torch.float16 -> torch.float32
                     # print(f"#### modify_norm_hidden_states #### {modify_norm_hidden_states.size()}")
+                    # 进行concat之后的self-attention
                     hidden_states_uc = self.attn1(modify_norm_hidden_states, 
                                                 encoder_hidden_states=modify_norm_hidden_states,
                                                 attention_mask=attention_mask)[:,:hidden_states.shape[-2],:] + hidden_states
@@ -146,6 +148,7 @@ class ReferenceNetAttention():
                     if do_classifier_free_guidance:
                         if hidden_states.shape[0] != _uc_mask.shape[0]:
                             _uc_mask = (
+                                # 只取前半部分
                                 torch.Tensor([1] * (hidden_states.shape[0]//2) + [0] * (hidden_states.shape[0]//2))
                                 .to(device)
                                 .bool()

@@ -219,7 +219,8 @@ def main(
         )
     else:
         unet = UNet2DConditionModel.from_pretrained(pretrained_model_path, subfolder="unet")
-        
+
+    # ReferenceNetAttention: spatial attention
     reference_control_writer = ReferenceNetAttention(referencenet, do_classifier_free_guidance=False, mode='write', fusion_blocks=fusion_blocks, is_image=image_finetune)
     reference_control_reader = ReferenceNetAttention(unet, do_classifier_free_guidance=False, mode='read', fusion_blocks=fusion_blocks, is_image=image_finetune)
     
