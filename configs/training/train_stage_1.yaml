@@ -1,8 +1,8 @@
 image_finetune: true
 
 output_dir: "outputs"
-pretrained_model_path: "./pretrained_models/stable-diffusion-v1-5"
-clip_model_path: "./pretrained_models/clip-vit-base-patch32"
+pretrained_model_path: "/mnt/disk_1/dongxin/checkpoints/stable-diffusion-v1-5"
+clip_model_path: "./mnt/disk_1/dongxin/checkpoints/clip-vit-base-patch32"
 # clip_model_path: "./pretrained_models/clip-vit-large-patch14"
 poseguider_checkpoint_path: ""
 referencenet_checkpoint_path: ""
@@ -18,6 +18,7 @@ noise_scheduler_kwargs:
 
 description: "### Train Info: train stage 1: image pretrain ###   ### similar to DisCo stage 1 ### "
 
+# 一定要搞懂unet的这些参数细节，对照diffusers unet框架图看
 unet_additional_kwargs:
   use_motion_module              : true
   motion_module_resolutions      : [ 1,2,4,8 ]
@@ -42,7 +43,7 @@ train_data:
   sample_size:  512 # for 40G 256
   sample_stride: 4
   sample_n_frames: 16
-  clip_model_path: "./pretrained_models/clip-vit-base-patch32"
+  clip_model_path: "/mnt/disk_1/dongxin/checkpoints/clip-vit-base-patch32"
 
 
 validation_data:
@@ -78,6 +79,7 @@ validation_steps_tuple: [2, 50]
 global_seed: 42
 # mixed_precision_training: true
 mixed_precision_training: False
+# 为什么不用xformers
 # enable_xformers_memory_efficient_attention: True
 enable_xformers_memory_efficient_attention: False
 
