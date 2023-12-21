@@ -39,6 +39,7 @@ from data.dataset import TikTok, collate_fn, UBC_Fashion
 from models.unet import UNet3DConditionModel
 # from animatediff.pipelines.pipeline_animation import AnimationPipeline
 from utils.util import save_videos_grid, zero_rank_print
+# ReferenceEncoder 与 ReferenceNet 差别吧: ReferenceEncoder为CLIP
 from models.ReferenceEncoder import ReferenceEncoder
 from models.PoseGuider import PoseGuider
 from models.ReferenceNet import ReferenceNet
@@ -242,6 +243,7 @@ def main(
     # Set unet trainable parameters
     unet.requires_grad_(False)
     # unet.requires_grad_(True)
+    # question: trainable_modules?
     for name, param in unet.named_parameters():
         for trainable_module_name in trainable_modules:
             if trainable_module_name in name:
@@ -256,7 +258,7 @@ def main(
         poseguider.requires_grad_(False)
         referencenet.requires_grad_(False)    
                    
-    
+    # question: trainable_params?
     trainable_params = list(filter(lambda p: p.requires_grad, unet.parameters()))
     if image_finetune:
         trainable_params += list(filter(lambda p: p.requires_grad, poseguider.parameters())) + \
@@ -277,7 +279,8 @@ def main(
         zero_rank_print(f"trainable params number: {len(trainable_params)}")
         zero_rank_print(f"trainable params scale: {sum(p.numel() for p in trainable_params) / 1e6:.3f} M")
 
-    # Enable xformers
+    # Enable
+    # question: 为什么poseguider不用xformers?
     if enable_xformers_memory_efficient_attention:
         if is_xformers_available():
             unet.enable_xformers_memory_efficient_attention()
@@ -286,6 +289,7 @@ def main(
             raise ValueError("xformers is not available. Make sure it is installed correctly")
 
     # Enable gradient checkpointing
+    # question: 为什么poseguider不用enable_gradient_checkpointing?
     if gradient_checkpointing:
         unet.enable_gradient_checkpointing()
         referencenet.enable_gradient_checkpointing()
@@ -300,6 +304,7 @@ def main(
     # Get the training dataset
     # train_dataset = WebVid10M(**train_data, is_image=image_finetune)
     # train_dataset = TikTok(**train_data, is_image=image_finetune)
+    # *a:('a', 'b', 'c') **b:(c=1, d=2, e=3)
     train_dataset = UBC_Fashion(**train_data, is_image=image_finetune)
     
     distributed_sampler = DistributedSampler(
@@ -456,10 +461,12 @@ def main(
                 latents_pose = rearrange(latents_pose, "(b f) c h w -> b c f h w", f=video_length)
             else:
                 latents_pose = poseguider(pixel_values_pose)
-            
+
+            # pose guider通过add注入noise
             noisy_latents = noisy_latents + latents_pose
             
             # Get the text embedding for conditioning
+            # reference image CLIP embedding
             with torch.no_grad():
                 # prompt_ids = tokenizer(
                 #     batch['text'], max_length=tokenizer.model_max_length, padding="max_length", truncation=True, return_tensors="pt"
@@ -468,6 +475,7 @@ def main(
                 encoder_hidden_states = clip_image_encoder(clip_ref_image).unsqueeze(1) # [bs,1,768]
             
             # support cfg train
+            # question ?
             mask = drop_image_embeds > 0
             mask = mask.unsqueeze(1).unsqueeze(2).expand_as(encoder_hidden_states)
             encoder_hidden_states[mask] = 0
@@ -488,7 +496,8 @@ def main(
                 ref_timesteps = torch.zeros_like(timesteps)
                 
                 # pdb.set_trace()
-                
+
+                # question: referencenet 得到embedding，输入reader? 因为在另一个文件输出，所以用read-output
                 referencenet(latents_ref_img, ref_timesteps, encoder_hidden_states)
                 reference_control_reader.update(reference_control_writer)
                 

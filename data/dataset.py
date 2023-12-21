@@ -80,7 +80,8 @@ class TikTok(Dataset):
         if self.is_image:
             pixel_values = pixel_values[0]
             pixel_values_pose = pixel_values_pose[0]
-        
+
+        # 随机选一帧作为reference image
         ref_img_idx = random.randint(0, video_length - 1)
         ref_img = video_reader[ref_img_idx]
         ref_img_pil = Image.fromarray(ref_img.asnumpy())
