@@ -430,6 +430,7 @@ def main(
             
             with torch.no_grad():
                 if not image_finetune:
+                    # vae的encode只能应对4维，所以把frame维度放入batch吧
                     pixel_values = rearrange(pixel_values, "b f c h w -> (b f) c h w")
                     latents = vae.encode(pixel_values).latent_dist
                     latents = latents.sample()
