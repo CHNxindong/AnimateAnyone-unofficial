@@ -10,6 +10,7 @@ class PoseGuider(nn.Module):
         super(PoseGuider, self).__init__()
 
         self.conv_layers = nn.Sequential(
+            # 相比论文，在每层conv layer都加了一个3x3 conv，维度不变吧
             nn.Conv2d(in_channels=3, out_channels=3, kernel_size=3, padding=1),
             nn.BatchNorm2d(3),
             nn.ReLU(),
