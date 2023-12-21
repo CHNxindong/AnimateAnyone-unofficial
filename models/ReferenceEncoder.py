@@ -21,6 +21,7 @@ class ReferenceEncoder(nn.Module):
 
     def forward(self, pixel_values):
         outputs = self.model(pixel_values)
+        # pooler_output: 就是过一层mlp
         pooled_output = outputs.pooler_output
         return pooled_output
 
