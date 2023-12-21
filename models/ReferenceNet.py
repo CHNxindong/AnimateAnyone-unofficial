@@ -117,6 +117,7 @@ class UNet2DConditionOutput(BaseOutput):
     sample: torch.FloatTensor = None
 
 
+# 与Unet2d_conditon相比没有结构差别，可以认为是一样
 class ReferenceNet(ModelMixin, ConfigMixin, UNet2DConditionLoadersMixin):
     r"""
     A conditional 2D UNet model that takes a noisy sample, conditional state, and a timestep and returns a sample
