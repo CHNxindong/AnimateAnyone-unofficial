@@ -16,7 +16,7 @@ noise_scheduler_kwargs:
   steps_offset:        1
   clip_sample:         false
 
-description: "### Train Info: train stage 1: image pretrain ###"
+description: "### Train Info: train stage 1: image pretrain ###   ### similar to DisCo stage 1 ### "
 
 unet_additional_kwargs:
   use_motion_module              : true
