@@ -13,7 +13,7 @@ The first training phase basic test passed, currently in training and testing th
 It only takes a few days to release the weights.😄
 
 ## Sample of Stage 1 Result on UBC-fashion dataset
-
+Special thanks to [Zhenzhi Wang](https://zhenzhiwang.github.io/) for assistance with code development and training.
 The current version of the face also has some artifacts.  Also, this is a model trained on a UBC dataset rather than a large-scale dataset.
 
 <table class="center">
@@ -36,16 +36,18 @@ In the current version, we recommend training on 8 or 16 A100,H100 (80G) at 512 
 - [x] **Release Inference Code.** 
 - [ ] **Release Unofficial Pre-trained Weights. <font color="red">(Note:Train on public datasets instead of large-scale private datasets, just for academic research.🤗)</font>**
 - [ ] **Release Gradio Demo.**
-- [ ] DeepSpeed + Accelerator Training.
-
 
 ## Requirements
-Same as [magic-animate](https://github.com/magic-research/magic-animate/tree/main).
 
-or you can:
 ```bash
 bash fast_env.sh
 ```
+
+## 🎬Gradio Demo (Published with weights.)
+```python
+python3 -m demo.gradio_animate
+```
+
 
 ## Training
 
@@ -61,19 +63,6 @@ torchrun --nnodes=2 --nproc_per_node=8 train.py --config configs/training/train_
 torchrun --nnodes=2 --nproc_per_node=8 train.py --config configs/training/train_stage_2.yaml
 ```
 
-## Inference
-
-#### First Stage
-
-```python
-python3 -m pipelines.animation_stage_1 --config configs/prompts/animation_stage_1.yaml
-```
-
-#### Second Stage
-
-```python
-python3 -m pipelines.animation_stage_2 --config configs/prompts/animation_stage_2.yaml
-```
 
 ## Acknowledgements
 Special thanks to the original authors of the [Animate Anyone](https://humanaigc.github.io/animate-anyone/) project and the contributors to the [magic-animate](https://github.com/magic-research/magic-animate/tree/main) and [AnimateDiff](https://github.com/guoyww/AnimateDiff) repository for their open research and foundational work that inspired this unofficial implementation.
